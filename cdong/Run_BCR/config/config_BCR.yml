@@ -1,0 +1,121 @@
+
+
+# Path of the file containing the list of plates and samples to be analyzed
+plates_samples_list: config/plates_samples_list.txt
+
+genomeDir: /scratch/cdong/References/GRCh38_ERCC92
+stargenomeDir: /scratch/cdong/References/starGenome_GRCh38_ERCC92
+bcfile: barcode/barcode_seq_2ndSet.txt
+
+ref: /scratch/cdong/References/blast/BCR_CstRegion/IMGT_IGH_ConstantRegion_nt.fasta
+
+#ref_TCR: /scratch/cdong/Refences/blast/TCR_CstRegion/IMGT_TR_ConstantRegion_nt.fasta
+
+
+#/mnt/NAS6/PMlab/scRNAseq/data_general/BCR_CstRegion/IMGT_mouse_IGLK_ConstantRegion_nt.fasta
+
+#ref2: "/mnt/NAS6/PMlab/scRNAseq/data_general/BCR_CstRegion/IMGT_IGLK_ConstantRegion_nt.fasta"
+ref2: /scratch/cdong/References/blast/BCR_CstRegion/IMGT_IGLK_ConstantRegion_nt.fasta
+
+
+species: human
+
+barcodes:
+ - CGTCTAAT
+ - AGACTCGT
+ - GCACGTCA
+ - TCAACGAC
+ - ATTTAGCG
+ - ATACAGAC
+ - TGCGTAGG
+ - TGGAGCTC
+ - TGAATACC
+ - TCTCACAC
+ - TACTGGTA
+ - ACGATAGG
+ - GATGTCGA
+ - TTACGGGT
+ - GAATGAGT
+ - CTTTGACA
+ - AGAGATCT
+ - GAGTCCTG
+ - CACACTGA
+ - GTTACAGG
+ - GGACCTTT
+ - TAGACTAT
+ - ACTGTTTG
+ - AAGTGGCT
+ - TGCTCTCA
+ - CGGCGTGG
+ - GTGCATGA
+ - GTCATTAG
+ - AGCTCCTT
+ - TCACCCGA
+ - GTTGCCAC
+ - CTAATGCG
+ - AACGAGGT
+ - AGCCACCA
+ - TAGTGAAC
+ - CCAGTCCA
+ - ACCTCAGC
+ - GGTGGACT
+ - CCGGCGTC
+ - TAACTCCG
+ - ACACCGTG
+ - GTAGAACG
+ - GGATTGAC
+ - ACGTATCC
+ - TTCGGAAA
+ - AGTTGTGT
+ - AAGCACAT
+ - CTGTCATT
+ - AACATTCT
+ - CTACGCTG
+ - GGGATTGT
+ - TGATGTAG
+ - TTCGCTGT
+ - GAAGACTT
+ - TCTGGGCA
+ - TCGCTACA
+ - GTGTTAGC
+ - ATGCGACG
+ - GAGGGTAG
+ - CGGGTGAA
+ - GCCATCTT
+ - TGCGACAT
+ - TCTATGGT
+ - AGGACTTA
+ - CCGCTCAG
+ - ACTAGCGA
+ - GTAACTCC
+ - CGGAAGTG
+ - CCGAGTAC
+ - GATCTGAG
+ - ACCTGGAG
+ - CATGGGTT
+ - ATTCCTAG
+ - TCGAACCG
+ - TCCACACT
+ - AGGTAAAG
+ - TAGGCGCG
+ - ACAGGCAT
+ - TTTGTGTC
+ - TGAGCATA
+ - TTAGACGC
+ - CGCTTGCT
+ - ATTGGAGC
+ - CATAGTCG
+ - TCTTGCTG
+ - GGGACAAC
+ - ATATTCCC
+ - TGTTAAGC
+ - TACGCCTC
+ - CACTTATC
+ - ACCGCTAA
+ - TAAGGTCC
+ - GAAAGGTG
+ - ACGTTGTA
+ - GTCTGCCG
+ - GCATTTGG
+
+
