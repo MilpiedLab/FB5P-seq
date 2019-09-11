@@ -5,7 +5,7 @@
 
 <a name="logo"/>
 <div align="center">
-<img src="https://github.com/Chuang1118/FB5PE/blob/master/logo.png?raw=true" alt="FB5PE Logo"  width="25%" height="25%" ></img>
+<img src="https://github.com/Chuang1118/FB5PE/blob/master/LOGOn.png?raw=true" alt="FB5PE Logo"  width="25%" height="25%" ></img>
 </a>
 </div>
 
@@ -41,12 +41,12 @@ Some other tools are used for other crucial steps. Here are the main steps of th
 
 ## FB5PE scRNA-seq workflow
 
-![workflow]( https://github.com/Chuang1118/FB5PE/blob/master/workflow.png?raw=true )
+![workflow]( https://github.com/Chuang1118/FB5PE/blob/master/Overview_simplify.png?raw=true )
 
 _Figure 1: An overview of the FB5PE scRNA-seq workflow_
 
 ## 
-![workflow_detail](https://github.com/Chuang1118/FB5PE/blob/master/pipeline_details-1.png?raw=true)
+![workflow_detail](https://github.com/Chuang1118/FB5PE/blob/master/Overview.png?raw=true)
 
 _Figure 2: the details of the FB5PE scRNA-seq workflow_
 
