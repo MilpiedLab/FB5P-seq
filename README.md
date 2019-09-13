@@ -424,13 +424,182 @@ After severals hours or 1 day, output like Output directory structure(see follow
 |   |-- etc…
 ```
 
-### And coding style tests
+### Log file
 
-Explain what these tests test and why
+nohup
 
 ```
-Give an example
+[cdong@login02 Run_2019_09_11]$ head -n 50 nohup.out 
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 600
+Job counts:
+	count	jobs
+	576	add_column_to_tsv_rule
+	6	add_right_header
+	1	all
+	6	bam_to_fastq
+	576	bam_to_fastq_rule
+	6	bam_to_sam
+	6	blastn_csr_HeavyCstRegion_rule
+	6	blastn_csr_LightCstRegion_rule
+	6	detect_errors
+	576	fastq_modification_for_trinity_rule
+	6	fastq_to_bam
+	6	filter_bad_bc_read
+	6	htseq_count
+	576	index_transcriptome_for_kallisto_rule
+	6	merge_kallisto_abundance_rule
+	6	merge_trinity_results_rule
+	6	merged_alignment
+	6	migmap_rule
+	6	modify_barcode
+	6	modify_barcode_in_bam
+	576	modify_trinity_results_rule
+	6	picard_sort_mapped
+	6	picard_sort_unmapped
+	576	quantify_tpm_kallisto_rule
+	6	sam_to_bam
+	6	split_bam_by_barcode
+	6	star_map
+	6	summary_matrix_transcript
+	6	summary_matrix_umi
+	6	tag_cell_barcode
+	6	tag_molecular_umi
+	576	trinity_on_each_bc_rule
+	4177
+
+[Thu Sep 12 15:41:43 2019]
+rule fastq_to_bam:
+    input: Input/plate1/10633663_S1_R1_001.fastq.gz, Input/plate1/10633663_S1_R2_001.fastq.gz
+    output: output/1_preprocessing/plate1/10633663_S1.bam
+    jobid: 4171
+    wildcards: plate=plate1, sample=10633663_S1
+
+Submitted job 4171 with external jobid 'Submitted batch job 1425241'.
+
+[Thu Sep 12 15:41:43 2019]
+rule fastq_to_bam:
+[cdong@login02 Run_2019_09_11]$ tail -n 50 nohup.out 
+Finished job 35.
+4172 of 4177 steps (100%) done
+[Thu Sep 12 20:35:55 2019]
+Finished job 1200.
+4173 of 4177 steps (100%) done
+
+[Thu Sep 12 20:35:55 2019]
+rule summary_matrix_transcript:
+    input: output/5_dgsummary/plate6/10633668_S6_merged_clean_HTSeqCount_modifiedBC.bam
+    output: output/5_dgsummary/plate6/10633668_S6_dge_summary_HTSeqCount_modifiedBC_transcript.txt, output/5_dgsummary/plate6/10633668_S6_dge_results_HTSeqCount_modifiedBC_transcript.txt
+    jobid: 42
+    wildcards: plate=plate6, sample=10633668_S6
+
+Submitted job 42 with external jobid 'Submitted batch job 1429776'.
+
+[Thu Sep 12 20:35:55 2019]
+rule summary_matrix_umi:
+    input: output/5_dgsummary/plate6/10633668_S6_merged_clean_HTSeqCount_modifiedBC.bam
+    output: output/5_dgsummary/plate6/10633668_S6_dge_summary_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt, output/5_dgsummary/plate6/10633668_S6_dge_results_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt
+    jobid: 36
+    wildcards: plate=plate6, sample=10633668_S6
+
+Submitted job 36 with external jobid 'Submitted batch job 1429777'.
+[Thu Sep 12 20:46:15 2019]
+Finished job 5.
+4174 of 4177 steps (100%) done
+[Thu Sep 12 20:48:36 2019]
+Finished job 42.
+4175 of 4177 steps (100%) done
+[Thu Sep 12 20:49:16 2019]
+Finished job 36.
+4176 of 4177 steps (100%) done
+
+[Thu Sep 12 20:49:16 2019]
+localrule all:
+    input: output/9_migmap/plate1/10633663_S1_migmap_output_filtered.csv, output/9_migmap/plate2/10633664_S2_migmap_output_filtered.csv, output/9_migmap/plate3/10633665_S3_migmap_output_filtered.csv, output/9_migmap/plate4/10633666_S4_migmap_output_filtered.csv, output/9_migmap/plate5/10633667_S5_migmap_output_filtered.csv, output/9_migmap/plate6/10633668_S6_migmap_output_filtered.csv, output/10_blast/plate1/10633663_S1_blastn_csr_HeavyCstRegion.out, output/10_blast/plate2/10633664_S2_blastn_csr_HeavyCstRegion.out, output/10_blast/plate3/10633665_S3_blastn_csr_HeavyCstRegion.out, output/10_blast/plate4/10633666_S4_blastn_csr_HeavyCstRegion.out, output/10_blast/plate5/10633667_S5_blastn_csr_HeavyCstRegion.out, output/10_blast/plate6/10633668_S6_blastn_csr_HeavyCstRegion.out, output/10_blast/plate1/10633663_S1_blastn_csr_LightCstRegion.out, output/10_blast/plate2/10633664_S2_blastn_csr_LightCstRegion.out, output/10_blast/plate3/10633665_S3_blastn_csr_LightCstRegion.out, output/10_blast/plate4/10633666_S4_blastn_csr_LightCstRegion.out, output/10_blast/plate5/10633667_S5_blastn_csr_LightCstRegion.out, output/10_blast/plate6/10633668_S6_blastn_csr_LightCstRegion.out, output/8_kallisto/plate1/10633663_S1_kallisto_merged_abundance.tsv, output/8_kallisto/plate2/10633664_S2_kallisto_merged_abundance.tsv, output/8_kallisto/plate3/10633665_S3_kallisto_merged_abundance.tsv, output/8_kallisto/plate4/10633666_S4_kallisto_merged_abundance.tsv, output/8_kallisto/plate5/10633667_S5_kallisto_merged_abundance.tsv, output/8_kallisto/plate6/10633668_S6_kallisto_merged_abundance.tsv, output/7_trinity/plate1/10633663_S1_all_trinity/trinity_results.fasta, output/7_trinity/plate2/10633664_S2_all_trinity/trinity_results.fasta, output/7_trinity/plate3/10633665_S3_all_trinity/trinity_results.fasta, output/7_trinity/plate4/10633666_S4_all_trinity/trinity_results.fasta, output/7_trinity/plate5/10633667_S5_all_trinity/trinity_results.fasta, output/7_trinity/plate6/10633668_S6_all_trinity/trinity_results.fasta, output/7_trinity/plate1/10633663_S1_all_trinity/merge_trinity_results_rule.log, output/7_trinity/plate2/10633664_S2_all_trinity/merge_trinity_results_rule.log, output/7_trinity/plate3/10633665_S3_all_trinity/merge_trinity_results_rule.log, output/7_trinity/plate4/10633666_S4_all_trinity/merge_trinity_results_rule.log, output/7_trinity/plate5/10633667_S5_all_trinity/merge_trinity_results_rule.log, output/7_trinity/plate6/10633668_S6_all_trinity/merge_trinity_results_rule.log, output/5_dgsummary/plate1/10633663_S1_dge_summary_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt, output/5_dgsummary/plate2/10633664_S2_dge_summary_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt, output/5_dgsummary/plate3/10633665_S3_dge_summary_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt, output/5_dgsummary/plate4/10633666_S4_dge_summary_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt, output/5_dgsummary/plate5/10633667_S5_dge_summary_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt, output/5_dgsummary/plate6/10633668_S6_dge_summary_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt, output/5_dgsummary/plate1/10633663_S1_dge_results_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt, output/5_dgsummary/plate2/10633664_S2_dge_results_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt, output/5_dgsummary/plate3/10633665_S3_dge_results_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt, output/5_dgsummary/plate4/10633666_S4_dge_results_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt, output/5_dgsummary/plate5/10633667_S5_dge_results_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt, output/5_dgsummary/plate6/10633668_S6_dge_results_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt, output/5_dgsummary/plate1/10633663_S1_dge_summary_HTSeqCount_modifiedBC_transcript.txt, output/5_dgsummary/plate2/10633664_S2_dge_summary_HTSeqCount_modifiedBC_transcript.txt, output/5_dgsummary/plate3/10633665_S3_dge_summary_HTSeqCount_modifiedBC_transcript.txt, output/5_dgsummary/plate4/10633666_S4_dge_summary_HTSeqCount_modifiedBC_transcript.txt, output/5_dgsummary/plate5/10633667_S5_dge_summary_HTSeqCount_modifiedBC_transcript.txt, output/5_dgsummary/plate6/10633668_S6_dge_summary_HTSeqCount_modifiedBC_transcript.txt, output/5_dgsummary/plate1/10633663_S1_dge_results_HTSeqCount_modifiedBC_transcript.txt, output/5_dgsummary/plate2/10633664_S2_dge_results_HTSeqCount_modifiedBC_transcript.txt, output/5_dgsummary/plate3/10633665_S3_dge_results_HTSeqCount_modifiedBC_transcript.txt, output/5_dgsummary/plate4/10633666_S4_dge_results_HTSeqCount_modifiedBC_transcript.txt, output/5_dgsummary/plate5/10633667_S5_dge_results_HTSeqCount_modifiedBC_transcript.txt, output/5_dgsummary/plate6/10633668_S6_dge_results_HTSeqCount_modifiedBC_transcript.txt
+    jobid: 0
+
+[Thu Sep 12 20:49:16 2019]
+Finished job 0.
+4177 of 4177 steps (100%) done
+Complete log: /scratch/cdong/Projet_FB5PE/custom_180416_h_HuPhysioB_2/Run_2019_09_11/.snakemake/log/2019-09-12T154137.140191.snakemake.log
+Duration dropseq: 0:00:00.017415
+Duration trinity: 0:00:00.026882
+Duration kallisto: 0:00:00.032312
+Duration migmap_BCR: 0:00:00.036807
+***** Reading file with plates and samples definition
+  List of plates to analyse: ['plate1', 'plate2', 'plate3', 'plate4', 'plate5', 'plate6']
+  List of samples to analyse: ['10633663_S1', '10633664_S2', '10633665_S3', '10633666_S4', '10633667_S5', '10633668_S6']
+***** End reading file with plates and samples definition
 ```
+
+```
+├── 10_blast
+│   ├── plate1
+│   │   ├── 10633663_S1_blastn_csr_HeavyCstRegion.out
+│   │   └── 10633663_S1_blastn_csr_LightCstRegion.out
+│   ├── plate2
+│   │   ├── 10633664_S2_blastn_csr_HeavyCstRegion.out
+│   │   └── 10633664_S2_blastn_csr_LightCstRegion.out
+│   ├── plate3
+│   │   ├── 10633665_S3_blastn_csr_HeavyCstRegion.out
+│   │   └── 10633665_S3_blastn_csr_LightCstRegion.out
+│   ├── plate4
+│   │   ├── 10633666_S4_blastn_csr_HeavyCstRegion.out
+│   │   └── 10633666_S4_blastn_csr_LightCstRegion.out
+│   ├── plate5
+│   │   ├── 10633667_S5_blastn_csr_HeavyCstRegion.out
+│   │   └── 10633667_S5_blastn_csr_LightCstRegion.out
+│   └── plate6
+│       ├── 10633668_S6_blastn_csr_HeavyCstRegion.out
+│       └── 10633668_S6_blastn_csr_LightCstRegion.out
+├── 5_dgsummary
+│   ├── plate1
+│   │   ├── 10633663_S1_dge_results_HTSeqCount_modifiedBC_transcript.txt
+│   │   └── 10633663_S1_dge_results_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt
+│   ├── plate2
+│   │   ├── 10633664_S2_dge_results_HTSeqCount_modifiedBC_transcript.txt
+│   │   └── 10633664_S2_dge_results_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt
+│   ├── plate3
+│   │   ├── 10633665_S3_dge_results_HTSeqCount_modifiedBC_transcript.txt
+│   │   └── 10633665_S3_dge_results_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt
+│   ├── plate4
+│   │   ├── 10633666_S4_dge_results_HTSeqCount_modifiedBC_transcript.txt
+│   │   └── 10633666_S4_dge_results_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt
+│   ├── plate5
+│   │   ├── 10633667_S5_dge_results_HTSeqCount_modifiedBC_transcript.txt
+│   │   └── 10633667_S5_dge_results_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt
+│   └── plate6
+│       ├── 10633668_S6_dge_results_HTSeqCount_modifiedBC_transcript.txt
+│       └── 10633668_S6_dge_results_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt
+├── 8_kallisto
+│   ├── plate1
+│   │   └── 10633663_S1_kallisto_merged_abundance.tsv
+│   ├── plate2
+│   │   └── 10633664_S2_kallisto_merged_abundance.tsv
+│   ├── plate3
+│   │   └── 10633665_S3_kallisto_merged_abundance.tsv
+│   ├── plate4
+│   │   └── 10633666_S4_kallisto_merged_abundance.tsv
+│   ├── plate5
+│   │   └── 10633667_S5_kallisto_merged_abundance.tsv
+│   └── plate6
+│       └── 10633668_S6_kallisto_merged_abundance.tsv
+└── 9_migmap
+    ├── plate1
+    │   └── 10633663_S1_migmap_output_filtered.csv
+    ├── plate2
+    │   └── 10633664_S2_migmap_output_filtered.csv
+    ├── plate3
+    │   └── 10633665_S3_migmap_output_filtered.csv
+    ├── plate4
+    │   └── 10633666_S4_migmap_output_filtered.csv
+    ├── plate5
+    │   └── 10633667_S5_migmap_output_filtered.csv
+    └── plate6
+        └── 10633668_S6_migmap_output_filtered.csv
+```
+
 
 ## Deploymen
 
