@@ -68,9 +68,9 @@ To run FB5Pseq on your experimental data, first enter the necessary parameters i
 
 Minimum hardware requirements:
 
-* input 22G
+* input 29G
 * 30 G of RAM
-* 1 T of drive space 
+* 1.5 T of drive space (output folder 1.2T)
 
 Recommended hardware requirement:
 
@@ -367,7 +367,7 @@ Now Job Launch
 mkdir log
 nohup ./BCRlaunch_1_lines_analysis.sh &
 ```
-After severals hours or 1 day, output like Output directory structure(see following section). The dataset custom_180416_h_HuPhysioB_2 have 6 plates, time execution is 05:07:33.
+After severals hours or 1 day, output like Output directory structure(see following section). My dataset custom_180416_h_HuPhysioB_2 have 6 plates, time execution is 05:07:33.
 
 
 ### Output directory structure
