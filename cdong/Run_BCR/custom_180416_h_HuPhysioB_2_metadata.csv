@@ -1,0 +1,27 @@
+Keyword,Description,Options
+Protocol,Protocol that was used to generate the scRNAseq libraries,Custom5prime
+Date,Date of scRNAseq data reception,180416
+Species,Species of cells analyzed,H
+ProjectH,Project for which human cells were analyzed,HuPhysioB_2
+ProjectM,Project for which mouse cells were analyzed,
+Description,Short description of the experiment,text
+ReferenceGenome,Reference genome to be used for alignment,GRCh38
+AdditionalReference,Whether additional references should be used for alignment,
+BCR,Whether BCR sequence data should be reconstructed,Yes
+TCR,Whether TCR sequence data should be reconstructed,No
+IndexSorting,Whether the experiment involves index sorting parameters,No
+IndexSortingFiles,Link to the Index Sorting Files Folder,
+Read1,Length and expected composition of Read1,"16nt, Well barcode (8nt) and UMI (5 nt), and TAT"
+Readi7sequences,i7 library index sequences,
+Readi7libraries,i7 indexed libraries names,
+Read2,Length and expected composition of Read2,"67nt, gene (scRNAseq)"
+PlateBarcodes,Whether the experiment involves plate barcodes parameters,Yes
+PlateMapFile,Link to the Plates Map description file,
+HTO,Whether HTOs were used for multiplexing,No
+HTOsequences,HTO sequences,
+HTOlibraries,HTO sample names,
+SortingDate,,
+SequencingDate,,
+SequencingPlatform,,HalioDx NextSeq550
+Sample,,10633663_S1;10633664_S2;10633665_S3;10633666_S4;10633667_S5;10633668_S6
+Plate,,6

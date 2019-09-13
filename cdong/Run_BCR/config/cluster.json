@@ -1,0 +1,36 @@
+{
+    "documentation": {
+        "cmdline": "Use with snakemake --cluster-config cluster.slurm.cheaha.json --cluster 'sbatch --job-name {cluster.job-name} --ntasks {cluster.ntasks} --cpus-per-task {threads} --mem-per-cpu {cluster.mem-per-cpu} --partition {cluster.partition} --time {cluster.time} --mail-user {cluster.mail-user} --mail-type {cluster.mail-type} --error {cluster.error} --output {cluster.output}'"
+    },
+    "__default__" : {
+        "job-name"       : "e.{rule}",
+        "project"        : "b098",
+        "partition"      : "skylake",
+        "time"           : "01:30:00",
+        "ntasks"         : 1,
+        "cpus-per-task"  : 1,
+        "mem-per-cpu"    : 8000,
+        "output"         : "log/%N.%j.%a.out",
+        "error"          : "log/%N.%j.%a.err",
+        "mail-user"      : "dong@ciml.univ-mrs.fr",
+        "mail-type"      : "FAIL"
+    },
+    "picard_sort_unmapped" : {
+        "mem-per-cpu"    : 16000
+    },
+    "picard_sort_mapped" : {
+        "mem-per-cpu"    : 16000
+    },
+    "star_map" : {
+        "time"           : "05:00:00",
+        "mem-per-cpu"    : 30000
+    },
+    "merged_alignment"   : {
+        "mem-per-cpu"    : 16000
+    },
+    "trinity_on_each_bc_rule" : {
+        "time"           : "03:00:00",
+        "cpus-per-task"  : 2,
+        "mem-per-cpu"    : 8000
+    }
+}

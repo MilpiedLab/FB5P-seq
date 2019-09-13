@@ -1,0 +1,67 @@
+
+
+# ############################################
+# ############################################
+rule index_transcriptome_for_kallisto_rule:
+	input:
+		"output/7_trinity/{plate}/BAMbyBC/{sample}_trinity_{barcode}/Trinity.fasta"
+	output:
+		"output/8_kallisto/{plate}/BAMbyBC/{sample}_trinity_{barcode}/TrinityIndexKallisto"
+	
+	singularity:
+        	"simg/bcr_pipe_masters_v2.img"
+	shell:
+		"kallisto index -i {output} {input}"
+
+# ############################################
+# ############################################
+rule quantify_tpm_kallisto_rule:
+	input:
+		index_kallisto_input="output/8_kallisto/{plate}/BAMbyBC/{sample}_trinity_{barcode}/TrinityIndexKallisto",
+		fastq_input="output/6_trinity_preprocessing/{plate}/BAMbyBC/{sample}_cellTag_molTag_filtered_modifiedBC_{barcode}.fastq"
+	output:
+		"output/8_kallisto/{plate}/BAMbyBC/{sample}_trinity_{barcode}/Kallisto/abundance.tsv"
+
+	singularity:
+        	"simg/bcr_pipe_masters_v2.img"
+	shell:
+		"kallisto quant --single -l 67 -s 1 -i {input.index_kallisto_input}  -o output/8_kallisto/{wildcards.plate}/BAMbyBC/{wildcards.sample}_trinity_{wildcards.barcode}/Kallisto {input.fastq_input}"
+
+# ############################################
+# ############################################
+rule add_column_to_tsv_rule:
+	input:
+		"output/8_kallisto/{plate}/BAMbyBC/{sample}_trinity_{barcode}/Kallisto/abundance.tsv"
+	output:
+		"output/8_kallisto/{plate}/BAMbyBC/{sample}_trinity_{barcode}/Kallisto/abundance_BC.tsv"
+	shell:
+		'''
+		awk -v var="{wildcards.barcode}" 'NR==1 {{printf("%s\\t%s\\n", $0, "BC")}}  NR>1 {{printf("%s\\t%s\\n", $0, var) }}' {input} > {output}
+		'''
+			
+# #############################################		
+# #############################################
+
+rule merge_kallisto_abundance_rule:
+	input:
+		expand("output/8_kallisto/{{plate}}/BAMbyBC/{{sample}}_trinity_{barcode}/Kallisto/abundance_BC.tsv",barcode=config["barcodes"])
+
+	output:
+		"output/8_kallisto/{plate}/{sample}_kallisto_merged_abundance.tsv"
+	shell:
+		'''
+		awk 'FNR>1' {input} > {output}
+		'''
+		
+# #############################################
+# #############################################	
+
+end_time = datetime.now()
+print('Duration kallisto: {}'.format(end_time - start_time))
+
+
+
+
+#rule all:
+#	input:
+#		expand("{PATH_DATA}/{plate}/unmapped/kallisto_merged_abundance.tsv", PATH_DATA=PATH_DATA,plate=config["plates"])

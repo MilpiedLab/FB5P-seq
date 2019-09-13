@@ -1,0 +1,142 @@
+
+
+# #############################################
+# #############################################
+
+rule modify_barcode_in_bam: 
+	input:	
+		bcseq2ndset_txt = config["bcfile"],
+		bam="output/1_preprocessing/{plate}/{sample}_cellTag_molTag_filtered.bam"
+	output:
+		bam = "output/6_trinity_preprocessing/{plate}/{sample}_cellTag_molTag_filtered_modifiedBC.bam",
+		log = "output/6_trinity_preprocessing/{plate}/{sample}_modify_barcode_in_bam.log"
+
+	singularity:
+        	"simg/tools.img"
+	shell: 
+		"touch {output.log};"
+		"echo {input.bam} >> {output.log};"
+		"python script/ModifyBarcodeInBam_2ndSetBC.py {input.bam} {input.bcseq2ndset_txt} {output.bam}"
+		
+# #############################################		
+# #############################################
+		
+rule split_bam_by_barcode:
+	input:	
+		"output/6_trinity_preprocessing/{plate}/{sample}_cellTag_molTag_filtered_modifiedBC.bam"
+	output:
+		"output/6_trinity_preprocessing/{plate}/{sample}_output_split_bam_by_barcode_rule.txt"
+
+	singularity:
+        	"simg/tools.img"
+	params:
+		bcseq2ndset_txt = config["bcfile"]
+	shell: 
+		"python script/SplitBamByBarcodeID_2ndSetBC.py {input} {params.bcseq2ndset_txt};"
+		"echo 'split_bam_by_barcode DONE!' > {output}"
+		# need to create a file txt as output because otherwise it will rerun split_bam_by_barcode multiple times
+				
+# #############################################		
+# #############################################
+		
+rule bam_to_fastq_rule:
+	input:
+		"output/6_trinity_preprocessing/{plate}/{sample}_output_split_bam_by_barcode_rule.txt"
+	output:
+		"output/6_trinity_preprocessing/{plate}/BAMbyBC/{sample}_cellTag_molTag_filtered_modifiedBC_{barcode}.fastq"
+		#"{PATH_DATA}/{plate}/unmapped/BAMbyBC/{plate}_cellTag_molTag_filtered_modifiedBC_{barcode}.fastq"
+
+	singularity:
+        	"simg/dropseqtools_1.12.img"
+	shell: 
+		"java -Xmx4g -jar /tools/Drop-seq_tools-1.12/3rdParty/picard/picard.jar SamToFastq INPUT=output/6_trinity_preprocessing/{wildcards.plate}/BAMbyBC/{wildcards.sample}_cellTag_molTag_filtered_modifiedBC_{wildcards.barcode}.bam FASTQ={output}" # wildcards.
+		#"rm {wildcards.plate}/unmapped/BAMbyBC/{wildcards.plate}_cellTag_molTag_filtered_modifiedBC_{wildcards.barcode}.bam"
+				
+# #############################################		
+# #############################################
+# motified head to header/1		
+rule fastq_modification_for_trinity_rule:
+	input:
+		"output/6_trinity_preprocessing/{plate}/BAMbyBC/{sample}_cellTag_molTag_filtered_modifiedBC_{barcode}.fastq"
+		#expand("{plate}/unmapped/BAMbyBC/plateTest_cellTag_molTag_filtered_modifiedBC_{barcode}.bam", plate=config["plates"], barcode=config["barcodes"])
+	output:
+		"output/6_trinity_preprocessing/{plate}/BAMbyBC/{sample}_cellTag_molTag_filtered_modify1_modifiedBC_{barcode}.fastq"
+		#expand("{plate}/unmapped/BAMbyBC/plateTest_cellTag_molTag_filtered_modifiedBC_{barcode}.fastq", plate=config["plates"], barcode=config["barcodes"])
+		#expand("{plate}/snakemake_output_bam_to_fastq.txt",plate=config["plates"])
+	shell: 
+		'''
+		awk '{{ if (NR%4==1) {{ print $1"/1" }} else {{ print }} }}' {input} > {output}
+		'''
+		
+# #############################################		
+# #############################################
+
+rule trinity_on_each_bc_rule:
+	input:
+		"output/6_trinity_preprocessing/{plate}/BAMbyBC/{sample}_cellTag_molTag_filtered_modify1_modifiedBC_{barcode}.fastq"
+		#"{plate}/snakemake_output_bam_to_fastq.txt"
+	output:
+		"output/7_trinity/{plate}/BAMbyBC/{sample}_trinity_{barcode}/Trinity.fasta"
+		#"{plate}/snakemake_output_trinity_on_each_barcode_rule.txt"
+	log:
+		"output/7_trinity/{plate}/BAMbyBC/{sample}_trinity_{barcode}/trinity.log"
+	threads:
+		1 # change snakemake -j 4
+
+	singularity:
+        	"simg/bcr_pipe_masters_v2.img"
+	shell:
+		"/usr/local/src/trinityrnaseq/Trinity --seqType fq --no_normalize_reads \
+			--single {input} \
+			--CPU {threads} --max_memory 20G --output output/7_trinity/{wildcards.plate}/BAMbyBC/{wildcards.sample}_trinity_{wildcards.barcode} &> {log} || true;"
+		
+		'''
+		for nb in `seq 1 120`
+		do
+			sleep 1s
+			if [ -f {output} ]
+			then
+			  break
+			fi
+		done
+		touch {output}
+		#if [ ! -f {output} ]; then
+		#	touch {output}
+		#fi
+		'''
+		# if error raised: create a trinity.fasta with nothing in it: touch {output}/Trinity.fasta
+	
+# #############################################		
+# #############################################
+
+rule modify_trinity_results_rule:
+	input:
+		"output/7_trinity/{plate}/BAMbyBC/{sample}_trinity_{barcode}/Trinity.fasta"
+	output:
+		"output/7_trinity/{plate}/BAMbyBC/{sample}_trinity_{barcode}/Trinity_withBC.fasta"
+	shell:
+		'''
+		awk -v var={wildcards.barcode} '{{ if (substr($1,1,1)==">") {{ print ">"var"_"substr($1,2,length($1)) }} else {{ print }} }}' {input} > {output}
+		'''
+		#necessite peut etre des "" pour var=
+				
+# #############################################		
+# #############################################
+
+rule merge_trinity_results_rule:
+	input:
+		expand("output/7_trinity/{{plate}}/BAMbyBC/{{sample}}_trinity_{barcode}/Trinity_withBC.fasta",barcode=config["barcodes"])	
+	output:
+		results="output/7_trinity/{plate}/{sample}_all_trinity/trinity_results.fasta",
+		txt="output/7_trinity/{plate}/{sample}_all_trinity/merge_trinity_results_rule.log"
+	shell:
+		"echo {input} > {output.txt};"
+		"cat {input} > {output.results}"
+		#necessite peut etre des "" pour var=
+		
+
+# #############################################		
+# #############################################	
+end_time = datetime.now()
+print('Duration trinity: {}'.format(end_time - start_time))
+

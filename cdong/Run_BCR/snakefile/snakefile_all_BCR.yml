@@ -1,0 +1,69 @@
+"""
+Author: C. DONG
+Affiliation: Ciml
+Aim: A simple Snakemake workflow to process paired end Drop-seq.
+Date: 13 june 2019
+#Run: snakemake -r --use-singularity -s snakefile.yml
+Latest modification: 
+  - problem RG tag:Z:A -> tag:A:A
+  - blank in var PLATES and SAMPLES      
+# 1 run equal 1 plate
+"""
+configfile: "config/config_BCR.yml"
+
+from datetime import datetime
+start_time = datetime.now()
+
+include: "dropseq_pipeline.yml"
+include: "trinity_pipeline.yml"
+include: "kallisto_pipeline.yml"
+include: "migmapBCR_pipeline.yml"
+
+
+
+PLATE_SAMPLE_LIST_FILE = config["plates_samples_list"]
+
+# Read the file containing the list of pairs of plate/sample
+# and create two list (variables PLATES and SAMPLES to store them)
+print( "***** Reading file with plates and samples definition")
+import csv
+PLATES = []
+SAMPLES = []
+
+
+
+
+with open( PLATE_SAMPLE_LIST_FILE, 'r') as csvfile:
+	plate_sample_reader = csv.reader( csvfile, delimiter='\t')
+	for row in plate_sample_reader:
+		if( len(row) == 2):
+			PLATES.append(row[0].strip()) # like chomp in perl
+			SAMPLES.append(row[1].strip())
+		else:
+			print( "A line does not contain a pair plate/sample:" + str( row))
+
+print( "  List of plates to analyse: " + str( PLATES))
+print( "  List of samples to analyse: " + str( SAMPLES))
+print( "***** End reading file with plates and samples definition")
+
+#
+#
+#		
+rule all:
+	input:
+                expand("output/9_migmap/{plate}/{sample}_migmap_output_filtered.csv", zip, plate= PLATES, sample = SAMPLES),
+                expand("output/10_blast/{plate}/{sample}_blastn_csr_HeavyCstRegion.out", zip, plate= PLATES, sample = SAMPLES),
+                expand("output/10_blast/{plate}/{sample}_blastn_csr_LightCstRegion.out", zip, plate= PLATES, sample = SAMPLES),
+                expand("output/8_kallisto/{plate}/{sample}_kallisto_merged_abundance.tsv",zip, plate= PLATES, sample = SAMPLES),
+                expand("output/7_trinity/{plate}/{sample}_all_trinity/trinity_results.fasta",zip, plate= PLATES, sample = SAMPLES),
+                expand("output/7_trinity/{plate}/{sample}_all_trinity/merge_trinity_results_rule.log",zip, plate= PLATES, sample = SAMPLES),
+                expand("output/5_dgsummary/{plate}/{sample}_dge_summary_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt",zip, plate=PLATES, sample=SAMPLES),
+                expand("output/5_dgsummary/{plate}/{sample}_dge_results_HTSeqCount_modifiedBC_UMI_EditDistance0_IslamFilter.txt",zip, plate=PLATES, sample=SAMPLES),
+                expand("output/5_dgsummary/{plate}/{sample}_dge_summary_HTSeqCount_modifiedBC_transcript.txt",zip, plate=PLATES, sample=SAMPLES),
+                expand("output/5_dgsummary/{plate}/{sample}_dge_results_HTSeqCount_modifiedBC_transcript.txt",zip, plate=PLATES, sample=SAMPLES) 
+#end_time = datetime.now()
+
+#print('Duration: {}'.format(end_time - start_time))
+
+
+
