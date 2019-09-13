@@ -131,7 +131,7 @@ If you scucceed, in the folder cdong/, the folder structure like following:
 |   `-- BCRpreRawdata_PlateSampleList.sh
 |   `-- BCRlaunch_1_lines_analysis.sh
 |   `-- BCRlaunch_1_lines_analysis_unlock.sh
-|   `-- custom_180416_h_HuPhysioB_1_metadata.csv
+|   `-- custom_180416_h_HuPhysioB_2_metadata.csv
 |   |-- snakafile
 |       `-- snakefile_all_BCR.yml
 |       `-- dropseq_pipeline.yml
@@ -180,15 +180,15 @@ cd Rawdata
 wget [OPTION]... [URL]...
 ```
 
-#### 4. Prepare metadata: custom_180416_h_HuPhysioB_1_metadata.csv
+#### 4. Prepare metadata: custom_180416_h_HuPhysioB_2_metadata.csv
 
 In this version, just last 2 lines are necessary, Sample and Plate
 ```
-Keyword,Description,Options
+eyword,Description,Options
 Protocol,Protocol that was used to generate the scRNAseq libraries,Custom5prime
 Date,Date of scRNAseq data reception,180416
 Species,Species of cells analyzed,H
-ProjectH,Project for which human cells were analyzed,HuPhysioB_1
+ProjectH,Project for which human cells were analyzed,HuPhysioB_2
 ProjectM,Project for which mouse cells were analyzed,
 Description,Short description of the experiment,text
 ReferenceGenome,Reference genome to be used for alignment,GRCh38
@@ -209,16 +209,16 @@ HTOlibraries,HTO sample names,
 SortingDate,,
 SequencingDate,,
 SequencingPlatform,,HalioDx NextSeq550
-Sample,,10633669_S1;10633670_S2;10633671_S3;10633672_S4;10633673_S5
-Plate,,5
+Sample,,10633663_S1;10633664_S2;10633665_S3;10633666_S4;10633667_S5;10633668_S6
+Plate,,6
 ```
 
 #### 5. Launch BCRpreRawdata_PlateSampleList.sh
 
-This script take custom_180416_h_HuPhysioB_1_metadata.csv as parameter.
+This script take custom_180416_h_HuPhysioB_2_metadata.csv as parameter.
 
 ```
-./BCRpreRawdata_PlateSampleList.sh custom_180416_h_HuPhysioB_1_metadata.csv
+./BCRpreRawdata_PlateSampleList.sh custom_180416_h_HuPhysioB_2_metadata.csv
 ```
 
 First, create a automatic folder Input which each plate folder have the paired end read .fastq.gz that have the symbolic link point to .fastq.gz of Rawdata like below.
@@ -226,22 +226,23 @@ First, create a automatic folder Input which each plate folder have the paired e
 ```
 |-- Input
 |   |-- plate1
-|       `-- 10633669_S1_R1_001.fastq.gz(symlink)
-|       `-- 10633669_S1_R2_001.fastq.gz
+|       `-- 10633663_S1_R1_001.fastq.gz(symlink)
+|       `-- 10633663_S1_R2_001.fastq.gz
 |   |-- plate2
-|       `-- 10633669_S1_R1_001.fastq.gz
-|       `-- 10633669_S1_R2_001.fastq.gz
+|       `-- 10633664_S2_R1_001.fastq.gz
+|       `-- 10633664_S2_R2_001.fastq.gz
 |   |-- etc…
 ```
 Second, generate to the file plates_samples_list.txt in config folder. 
 
 config/plates_samples_list.txt 
 ```
-plate1   10633669_S1
-plate2   10633670_S2
-plate3   10633671_S3
-plate4   10633672_S4
-plate5   10633673_S5
+plate1   10633663_S1
+plate2   10633664_S2
+plate3   10633665_S3
+plate4   10633666_S4
+plate5   10633667_S5
+plate6   10633668_S6
 ```
 #### 6. Settings config file
 
@@ -299,28 +300,37 @@ barcodes:
 
 #### 7. Settings example of snakemake using HPC cluster via SLURM scheduler
 
-cluster.json, configuration of each Snakemake rule, I have used 1 cpu and time limited 1h30 by default, and my Input .fastq.gz around 3.3G for Read1 and 1.2G for Read2 were performed using a NextSeq. If your dataset have the huge size, you must change the parameter mem-per-cpu and time limited to run correctly. 
+_cluster.json_, configuration of each Snakemake rule, I have used 2 cpu("mem-per-cpu":16000) and time limited 1h30 by default, and my Input .fastq.gz around 3.8G for Read1 and 1.4G for Read2 were performed using a NextSeq. If your dataset have the huge size, you must change the parameter mem-per-cpu and time limited to run correctly. 
 ```
 {
     "documentation": {
         "cmdline": "Use with snakemake --cluster-config cluster.slurm.cheaha.json --cluster 'sbatch --job-name {cluster.job-name} --ntasks {cluster.ntasks} --cpus-per-task {threads} --mem-per-cpu {cluster.mem-per-cpu} --partition {cluster.partition} --time {cluster.time} --mail-user {cluster.mail-user} --mail-type {cluster.mail-type} --error {cluster.error} --output {cluster.output}'"
     },
     "__default__" : {
-        "job-name"       : "c.{rule}",
+        "job-name"       : "e.{rule}",
         "project"        : "b098",
         "partition"      : "skylake",
         "time"           : "01:30:00",
         "ntasks"         : 1,
         "cpus-per-task"  : 1,
-        "mem-per-cpu"    : 4000,
+        "mem-per-cpu"    : 8000,
         "output"         : "log/%N.%j.%a.out",
         "error"          : "log/%N.%j.%a.err",
         "mail-user"      : "dong@ciml.univ-mrs.fr",
         "mail-type"      : "FAIL"
     },
+    "picard_sort_unmapped" : {
+        "mem-per-cpu"    : 16000
+    },
+    "picard_sort_mapped" : {
+        "mem-per-cpu"    : 16000
+    },
     "star_map" : {
         "time"           : "05:00:00",
         "mem-per-cpu"    : 30000
+    },
+    "merged_alignment"   : {
+        "mem-per-cpu"    : 16000
     },
     "trinity_on_each_bc_rule" : {
         "time"           : "03:00:00",
@@ -328,12 +338,13 @@ cluster.json, configuration of each Snakemake rule, I have used 1 cpu and time l
         "mem-per-cpu"    : 8000
     }
 }
+~      
 
 
 ```
 #### 8. Setting Launch BCR file
 
-**_BCRlaunch_1_lines_analysis.sh_** have -- jobs parameter, each plate have 96 barcodes and dataset have 5 plates, so 96*5 = 480 jobs parallel in Trinity rules(i.e. bam_to_fastq_rule, trinity_on_each_bc_rule and so on). 
+**_BCRlaunch_1_lines_analysis.sh_** have -- jobs parameter, each plate have 96 barcodes and dataset have 6 plates, so 96*6 = 576(around 600) jobs parallel in Trinity rules(i.e. bam_to_fastq_rule, trinity_on_each_bc_rule and so on). 
 
 You need change the parameter -B, A user-bind path specification, to run correctly.
 
@@ -344,7 +355,7 @@ module load userspace/all
 module load python3/3.6.3
 source /home/cdong/snakemake/bin/activate
 
-snakemake --jobs 480 --use-singularity --singularity-args "-B /scratch/cdong:/scratch/cdong" --snakefile snakefile/snakefile_all_BCR.yml --configfile config/config_BCR.yml --cluster-config config/cluster.json --cluster 'sbatch -A {cluster.project} --job-name {cluster.job-name} --ntasks {cluster.ntasks} --cpus-per-task {threads} --mem-per-cpu {cluster.mem-per-cpu} --partition {cluster.partition} --time {cluster.time} --mail-user {cluster.mail-user} --mail-type {cluster.mail-type} --error {cluster.error} --output {cluster.output}'
+snakemake --jobs 600 --use-singularity --singularity-args "-B /scratch/cdong:/scratch/cdong" --snakefile snakefile/snakefile_all_BCR.yml --configfile config/config_BCR.yml --cluster-config config/cluster.json --cluster 'sbatch -A {cluster.project} --job-name {cluster.job-name} --ntasks {cluster.ntasks} --cpus-per-task {threads} --mem-per-cpu {cluster.mem-per-cpu} --partition {cluster.partition} --time {cluster.time} --mail-user {cluster.mail-user} --mail-type {cluster.mail-type} --error {cluster.error} --output {cluster.output}'
 ```
 #### 9. Launch the pipeline
 
@@ -356,7 +367,7 @@ Now Job Launch
 mkdir log
 nohup ./BCRlaunch_1_lines_analysis.sh &
 ```
-After severals hours or 1 day, output like Output directory structure(see following section). The dataset custom_180416_h_HuPhysioB_1 have 5 plates, time execution about 6 hours.
+After severals hours or 1 day, output like Output directory structure(see following section). The dataset custom_180416_h_HuPhysioB_2 have 6 plates, time execution is 05:07:33.
 
 
 ### Output directory structure
@@ -532,7 +543,7 @@ Duration migmap_BCR: 0:00:00.036807
   List of samples to analyse: ['10633663_S1', '10633664_S2', '10633665_S3', '10633666_S4', '10633667_S5', '10633668_S6']
 ***** End reading file with plates and samples definition
 ```
-
+### Output important for downstream analysis
 ```
 ├── 10_blast
 │   ├── plate1
