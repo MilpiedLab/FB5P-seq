@@ -75,6 +75,7 @@ Minimum hardware requirements:
 Recommended hardware requirement:
 
 * HPC Slurm environment 
+* Multiple cores Server > 10CPU/20Threads, RAM > 100 GB
 
 Software requirements:
 
@@ -82,16 +83,31 @@ Software requirements:
 * Singularity
 * Snakemake
 
+### 2 Versions
+* Total parellel jobs run in HPC Slurm
+```
+112 nodes Dell PowerEdge C6420
+32 cores/node, processor Intel® Xeon® Gold 6142 (Sky Lake) à 2.6 GHz 
+192 Go de RAM/node
+```
+* Semi parellel jobs run in Multiple cores Server
+```
+Cores: 20CPU/40Threads
+RAM: 190GB
+```
+## 1 Version HPC Slurm
+
 ### Preparing the environment for the development
 
 What things you need to install the software and how to install them
 
-Create an [environnement virtuel with python3/3.3.6]( http://sametmax.com/les-environnement-virtuels-python-virtualenv-et-virtualenvwrapper/)
-
-then,
+Create an [environnement virtuel with python3]( http://sametmax.com/les-environnement-virtuels-python-virtualenv-et-virtualenvwrapper/),within Python Virtual Environment install snakemake 
 
 ```
-pip install snakemake
+$ pip install --user virtualenv
+$ virtualenv fb5p -p /usr/bin/python3.5
+$ source fb5p/bin/activate
+(fb5p)$ pip3 install snakemake
 ```
 
 ### Download scripts, singularity images, Reference genome, data .....
@@ -609,6 +625,43 @@ Duration migmap_BCR: 0:00:00.036807
     │   └── 10633667_S5_migmap_output_filtered.csv
     └── plate6
         └── 10633668_S6_migmap_output_filtered.csv
+```
+## Version Server
+
+Idem to Version HPC slurm, just change the config_TCR.yml file, Path of genome reference
+```
+#Path of the file containing the list of plates and samples to be analyzed
+plates_samples_list: config/plates_samples_list.txt
+
+#genomeDir: /scratch/cdong/References/GRCh38_ERCC92
+genomeDir: /mnt/NAS4/BNlab/scRNAseq_dev/genomes/GRCh38_ERCC92
+#stargenomeDir: /scratch/cdong/References/starGenome_GRCh38_ERCC92
+stargenomeDir: /mnt/NAS4/BNlab/scRNAseq_dev/genomes/starGenome_GRCh38_ERCC92
+bcfile: barcode/barcode_seq_2ndSet.txt
+
+ref_TCR: /mnt/NAS6/PMlab/scRNAseq/data_general/TCR_CstRegion/IMGT_TR_ConstantRegion_nt.fasta
+#ref_TCR: /scratch/cdong/References/blast/TCR_CstRegion/IMGT_TR_ConstantRegion_nt.fasta
+
+species: human
+
+barcodes:
+ - CGTCTAAT
+ - AGACTCGT
+ - GCACGTCA
+ - TCAACGAC
+ - ATTTAGCG
+ - ATACAGAC
+ - TGCGTAGG
+ - TGGAGCTC
+
+```
+#### Launch the pipeline
+snakemake -rn : dryrun print a summary of the DAG of jobs.
+if you don't get any error, you want to launch the jobs delete "n".
+```
+$ source fb5p/bin/activate
+(fb5p)$ nohup snakemake -j 30 -rn --use-singularity -s snakefile/snakefile_all_TCR.yml &
+(fb5p)$ nohup snakemake -j 30 -r --use-singularity -s snakefile/snakefile_all_TCR.yml &
 ```
 
 
