@@ -1,7 +1,7 @@
 ![Screen1](https://github.com/Chuang1118/FB5PE/blob/master/screen1.png?raw=true)
 
 
-# Pipeline Facs Based 5 Prime End ScRNAseq FB5Pseq
+# Pipeline Facs Based 5 Prime End ScRNAseq FB5P-seq
 
 <a name="logo"/>
 <div align="center">
@@ -9,70 +9,69 @@
 </a>
 </div>
 
-**Copyright 2019: PMlab**
+**Copyright 2019: PMlab, Centre d'Immunologie de Marseille-Luminy**
 **This work is distributed under the terms of the GNU General Public License. It is free to use for all purposes.**
 
 ----------------
 
 ## Introduction
 
-**_corrige moi syntaxe_**
+FB5P-seq is a computational pipeline to process single-cell RNA sequencing (scRNAseq) data produced with the FB5P-seq protocol designed by the Milpied lab at Centre d'Immunologie de Marseille-Luminy. The pipeline relies on 5 main softwares:
 
-FB5PEseq is a computational pipeline to process Single-cell RNA sequencing data (scRNAseq). It is designed to be run on the cluster systems Gauss (at the Ciml) or Mesocentre (at the Aix Marseille université). The pipeline relies on 4 software principles:
-
-*  The Drop-seq software for get a "digital expression matrix" that will contain integer counts of number of transcripts for each gene in each cell.
+*  The Drop-seq software to get a "digital expression matrix" that will contain integer counts of number of transcripts for each gene in each cell.
 *  The Trinity software for the efficient and robust de novo reconstruction of transcriptomes from RNAseq data.
 *  The kallisto program for quantifying abundances of transcripts.
-*  MiGMAP: IgBlast V-(D)-J mapping tool.
-*  Blastn : mapper for constant region.
+*  MiGMAP: IgBlast V-(D)-J mapping tool to identify and filter T cell receptor (TCR) or B cell receptor (BCR) sequences.
+*  Blastn : mapper for constant regions of TCR or BCR.
 
-Some other tools are used for other crucial steps. Here are the main steps of the FB5PEseq pipeline calculations:
+Some other tools are used at different steps. Here are the main steps of the FB5P-seq pipeline:
 
-1. 1_Preprocessing: This step is done with the Drop-seq tools V1.12. Converting FASTQ to BAM by using Picard, Tagging Bam file (cell barcode and molecule umi) and filtering bad barcode read by TagBamWithReadSequenceExtended and FiLterBAM, respectively.  
+1. 1_Preprocessing: This step is done with the Drop-seq tools V1.12. Converting FASTQ to BAM by using Picard, Tagging Bam file (cell barcode and molecule umi) and filtering bad barcode reads by TagBamWithReadSequenceExtended and FiLterBAM, respectively.  
 
 2. 2_Preprocessing2: Using Picard tool to convert bam to fastq and sort by queryname for the unmapped bam.
 
-3. 3_Alignment: Mapping the reads on the genome(GRCh38): this step is include merge bam alignment with unmapped bam that have produced by precede step 2, also convert bam to sam.
+3. 3_Alignment: Mapping the reads on the genome (here, we use the human GRCh38 with additional references for ERCC spike-ins): this step includes the merging of bam alignment with the unmapped bam that was produced in step 2, and also converts bam to sam.
 
-4. 4_counting: Counting reads in features with htseq-count, converting sam to bam, adding right header with samtools reheader and a python step to merge the BC with a mismatch 1 max.
+4. 4_counting: Counting reads in features with htseq-count, converting sam to bam, adding right header with samtools reheader and a python step to merge the cell barcodes with 1 mismatch.
 
-5. 5_dgeSummary: Extracting Digital Gene Expression (DGE) data from an library is done before using the Drop-seq program DigitalExpression. There are two outputs levels available: tanscript and  UMI. Each level with 2 outputs, the primary is the DGE matrix, with each a row for each gene, and a column for each cell, the secondary analysis is a summary of the DGE matrix on a per-cell level, indicating the number of genes ans transcripts observed.
+5. 5_dgeSummary: Extracting Digital Gene Expression (DGE) data is done using the Drop-seq program DigitalExpression. There are two output types available: transcript and  UMI. Each type with 2 outputs, the primary output is the DGE matrix, with a row for each gene, and a column for each cell; the secondary output is a summary of the DGE matrix on a per-cell level, indicating the number of genes and transcripts observed.
 
 
-## FB5PE scRNA-seq workflow
+## FB5P-seq pipeline workflow
 
 ![workflow]( https://github.com/Chuang1118/FB5PE/blob/master/Overview_simplify.png?raw=true )
 
-_Figure 1: An overview of the FB5PE scRNA-seq workflow_
+_Figure 1: overview of the FB5P-seq pipeline workflow_
 
 ## 
 ![workflow_detail](https://github.com/Chuang1118/FB5PE/blob/master/Overview.png?raw=true)
 
-_Figure 2: the details of the FB5PE scRNA-seq workflow_
+_Figure 2: detailed view of the FB5P-seq pipeline workflow_
 
 
 
 ## Resource consideration
 
-Single cell expression analysis is data intensive, and requires substantial computing resources. The pipeline uses the STAR aligner for read mapping, so the memory requirements will scale with the size of the genome. Please look at the STAR manual for the concrete number about the memory requirements. For the human/mouse genome it requires ~ 40Gb of RAM. The pipeline produces temporary files which require a substantial amount of disk space. Please ensure that you have at least 30Gb of disk space per 100 milion sequenced reads.
+Single cell gene expression expression analysis requires substantial computing resources. The pipeline uses the STAR aligner for read mapping, so the memory requirements will scale with the size of the genome. Please look at the STAR manual for specific memory requirements. For the human or mouse genome it requires ~ 40 Gb of RAM. The pipeline produces temporary files which require a substantial amount of disk space. Please ensure that you have at least 30 Gb of disk space per 100 million sequenced reads.
 
-Important: please make sure that the temporary directory has adequate free space
+Important: make sure that the temporary directory has adequate free space.
 
 
 
 ## Getting Started
 
-To run FB5Pseq on your experimental data, first enter the necessary parameters in the spreadsheet file (see Settings File section), and then from the terminal type. To run the pipeline, you will also need the appropriate genome sequence in fasta format, and the genome annotation in a gtf format
+To run FB5P-seq on your experimental data, first enter the necessary parameters in the spreadsheet file (see Settings File section), and then from the terminal type. To run the pipeline, you will also need the appropriate genome sequence in fasta format, and the genome annotation in a gtf format.
 
 ### Prerequisites
 
 Minimum hardware requirements:
 
-* input 29G
-* 30 G of RAM
-* 1.5 T of drive space (output folder 1.2T)
+* input 29 Gb
+* 30 Gb of RAM
+* 1.5 Tb of drive space (output folder 1.2 Tb)
 
 Recommended hardware requirement:
+We provide two versions of the pipeline depending on the type of hardware:
 
 * HPC Slurm environment 
 * Multiple cores Server > 10CPU/20Threads, RAM > 100 GB
@@ -84,24 +83,24 @@ Software requirements:
 * Snakemake
 
 ### 2 Versions
-* Total parellel jobs run in HPC Slurm
+* Total parallel jobs run in HPC Slurm
 ```
 112 nodes Dell PowerEdge C6420
-32 cores/node, processor Intel® Xeon® Gold 6142 (Sky Lake) à 2.6 GHz 
-192 Go de RAM/node
+32 cores/node, processor Intel® Xeon® Gold 6142 (Sky Lake) at 2.6 GHz 
+192 Gb RAM/node
 ```
-* Semi parellel jobs run in Multiple cores Server
+* Semi parallel jobs run in Multiple cores Server
 ```
 Cores: 20CPU/40Threads
 RAM: 190GB
 ```
-## 1 Version HPC Slurm
+## Version 1: HPC Slurm hardware
 
 ### Preparing the environment for the development
 
-What things you need to install the software and how to install them
+Things you need to install the software and how to install them.
 
-Create an [environnement virtuel with python3]( http://sametmax.com/les-environnement-virtuels-python-virtualenv-et-virtualenvwrapper/),within Python Virtual Environment install snakemake 
+Create a [virtual environment with python3]( http://sametmax.com/les-environnement-virtuels-python-virtualenv-et-virtualenvwrapper/),within Python Virtual Environment install snakemake 
 
 ```
 $ pip install --user virtualenv
@@ -112,16 +111,17 @@ $ source fb5p/bin/activate
 
 ### Download scripts, singularity images, Reference genome, data .....
 
-A step by step series of examples that tell you how to get a development env running
+A step by step series of examples that tell you how to get a development env running.
 
-#### 1. Use git clone for get all scripts, configuration files and reference genome for Blastn
+#### 1. Use git clone to get all scripts, configuration files and reference genome for Blastn
 Get them from Github
 
 ```
 git clone https://github.com/Chuang1118/FB5PE.git
+git clone https://github.com/MilpiedLab/FB5P-seq.git
 ```
 
-If you scucceed, in the folder cdong/, the folder structure like following:
+If you succeed, in the folder FB5P-seq/, the folder structure will be the following:
 ```
 |-- References
 |   |-- blast   
@@ -165,9 +165,9 @@ If you scucceed, in the folder cdong/, the folder structure like following:
 ```
 #### 2. Use wget for get all singularity images, Star reference genome, reference genome .fa and annotation .gtf
 
-Download reference genome from zenodo and putting them at the right places
+Download reference genome (human GRCh38 plus additional references for ERCC spike-ins) from zenodo and put them at the right place
 ```
-cd FB5PE/cdong
+cd FB5P-seq/References
 wget https://zenodo.org/record/3403043/files/starGenome_GRCh38_ERCC92.tar.gz
 tar zxvf starGenome_GRCh38_ERCC92.tar.gz
 wget https://zenodo.org/record/3403043/files/GRCh38_ERCC92.tar.gz
@@ -190,17 +190,18 @@ wget https://zenodo.org/record/3403043/files/tools.img
 #### 3. Download rawdata .fastq.gz format from the GEO site.
 
 ```
-cd ..
+cd FB5P-seq
 mkdir Rawdata
 cd Rawdata
 wget [OPTION]... [URL]...
 ```
 
-#### 4. Prepare metadata: custom_180416_h_HuPhysioB_2_metadata.csv
+#### 4. Prepare metadata: 
 
-In this version, just last 2 lines are necessary, Sample and Plate
+example file in Run_BCR: custom_180416_h_HuPhysioB_2_metadata.csv
+In this version, just the last 2 lines are necessary, Sample and Plate
 ```
-eyword,Description,Options
+Keyword,Description,Options
 Protocol,Protocol that was used to generate the scRNAseq libraries,Custom5prime
 Date,Date of scRNAseq data reception,180416
 Species,Species of cells analyzed,H
@@ -231,13 +232,13 @@ Plate,,6
 
 #### 5. Launch BCRpreRawdata_PlateSampleList.sh
 
-This script take custom_180416_h_HuPhysioB_2_metadata.csv as parameter.
+For this example, the script takes custom_180416_h_HuPhysioB_2_metadata.csv as input parameter.
 
 ```
 ./BCRpreRawdata_PlateSampleList.sh custom_180416_h_HuPhysioB_2_metadata.csv
 ```
 
-First, create a automatic folder Input which each plate folder have the paired end read .fastq.gz that have the symbolic link point to .fastq.gz of Rawdata like below.
+First, automatically create a folder Input in which each plate folder contains the paired end read files .fastq.gz that have the symbolic link point to .fastq.gz of Rawdata like below.
 
 ```
 |-- Input
@@ -249,7 +250,7 @@ First, create a automatic folder Input which each plate folder have the paired e
 |       `-- 10633664_S2_R2_001.fastq.gz
 |   |-- etc…
 ```
-Second, generate to the file plates_samples_list.txt in config folder. 
+Second, generate the file plates_samples_list.txt in config folder. 
 
 config/plates_samples_list.txt 
 ```
@@ -276,7 +277,7 @@ The configuration file is a YAML file which specifies:
 
 - barcodes
 
-Example of config_BCR.yml, when you apply the pipeline, you need change the path **/scratch/cdong/References/......**
+Example of config_BCR.yml, when you apply the pipeline, you need change the path **/scratch/cdong/References/......** to your specified path where you have installed the FB5P-seq folders.
 
 ```
 # path of the file containing the list of plates and samples to be analyzed
@@ -314,9 +315,9 @@ barcodes:
  - etc...
 ```
 
-#### 7. Settings example of snakemake using HPC cluster via SLURM scheduler
+#### 7. Example settings of snakemake for running on HPC cluster via SLURM scheduler
 
-_cluster.json_, configuration of each Snakemake rule, I have used 2 cpu("mem-per-cpu":16000) and time limited 1h30 by default, and my Input .fastq.gz around 3.8G for Read1 and 1.4G for Read2 were performed using a NextSeq. If your dataset have the huge size, you must change the parameter mem-per-cpu and time limited to run correctly. 
+_cluster.json_, configuration of each Snakemake rule, I have used 2 cpu ("mem-per-cpu":16000) and time limited to 1h30 by default, for my Input .fastq.gz around 3.8 Gb for Read1 and 1.4 Gb for Read2 (performed on NextSeq550 with HighOutput 75-cycle flow cell). Depending on the size of your dataset, you will have to change the parameters mem-per-cpu and time limited to run correctly. 
 ```
 {
     "documentation": {
@@ -360,9 +361,9 @@ _cluster.json_, configuration of each Snakemake rule, I have used 2 cpu("mem-per
 ```
 #### 8. Setting Launch BCR file
 
-**_BCRlaunch_1_lines_analysis.sh_** have -- jobs parameter, each plate have 96 barcodes and dataset have 6 plates, so 96*6 = 576(around 600) jobs parallel in Trinity rules(i.e. bam_to_fastq_rule, trinity_on_each_bc_rule and so on). 
+**_BCRlaunch_1_lines_analysis.sh_** have -- jobs parameter, each plate have 96 barcodes and dataset have 6 plates, so 96*6 = 576(around 600) jobs in parallel for Trinity rules (i.e. bam_to_fastq_rule, trinity_on_each_bc_rule and so on). 
 
-You need change the parameter -B, A user-bind path specification, to run correctly.
+You will need to change the parameter -B to specify the path to your FB5P-seq run folder, to run correctly.
 
 ```
 #!/bin/bash
@@ -383,7 +384,7 @@ Now Job Launch
 mkdir log
 nohup ./BCRlaunch_1_lines_analysis.sh &
 ```
-After severals hours or 1 day, output like Output directory structure(see following section). My dataset custom_180416_h_HuPhysioB_2 have 6 plates, time execution is 05:07:33.
+After severals hours or 1 day, the output will be found in the Output directory (see following section). My dataset custom_180416_h_HuPhysioB_2 has scRNAseq data for 6 plates of 96 cells, time execution is 05:07:33.
 
 
 ### Output directory structure
@@ -559,7 +560,7 @@ Duration migmap_BCR: 0:00:00.036807
   List of samples to analyse: ['10633663_S1', '10633664_S2', '10633665_S3', '10633666_S4', '10633667_S5', '10633668_S6']
 ***** End reading file with plates and samples definition
 ```
-### Output important for downstream analysis
+### Output important for downstream analyses
 ```
 ├── 10_blast
 │   ├── plate1
@@ -626,21 +627,20 @@ Duration migmap_BCR: 0:00:00.036807
     └── plate6
         └── 10633668_S6_migmap_output_filtered.csv
 ```
-## Version Server
+## Version 2: Multiple cores Server
 
-Idem to Version HPC slurm, just change the config_TCR.yml file, Path of genome reference
+This version is similar to Version 1:  HPC Slurm hardware, just change the config_TCR.yml file, including Path of genome reference. Here the example is for running on a human T cell FB5P-seq dataset.
 ```
 #Path of the file containing the list of plates and samples to be analyzed
 plates_samples_list: config/plates_samples_list.txt
 
-#genomeDir: /scratch/cdong/References/GRCh38_ERCC92
-genomeDir: /mnt/NAS4/BNlab/scRNAseq_dev/genomes/GRCh38_ERCC92
-#stargenomeDir: /scratch/cdong/References/starGenome_GRCh38_ERCC92
-stargenomeDir: /mnt/NAS4/BNlab/scRNAseq_dev/genomes/starGenome_GRCh38_ERCC92
+genomeDir: /scratch/cdong/References/GRCh38_ERCC92
+
+stargenomeDir: /scratch/cdong/References/starGenome_GRCh38_ERCC92
+
 bcfile: barcode/barcode_seq_2ndSet.txt
 
-ref_TCR: /mnt/NAS6/PMlab/scRNAseq/data_general/TCR_CstRegion/IMGT_TR_ConstantRegion_nt.fasta
-#ref_TCR: /scratch/cdong/References/blast/TCR_CstRegion/IMGT_TR_ConstantRegion_nt.fasta
+ref_TCR: /scratch/cdong/References/blast/TCR_CstRegion/IMGT_TR_ConstantRegion_nt.fasta
 
 species: human
 
@@ -665,7 +665,7 @@ $ source fb5p/bin/activate
 ```
 
 
-## Deploymen
+## Deployment
 
 Add additional notes about how to deploy this on a live systemPlease read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.
 
