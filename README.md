@@ -1,7 +1,4 @@
-![Screen1](https://github.com/Chuang1118/FB5PE/blob/master/screen1.png?raw=true)
-
-
-# Pipeline Facs Based 5 Prime End ScRNAseq FB5P-seq
+# FB5P-seq: FACS-based 5'-end single-cell RNA-seq
 
 <a name="logo"/>
 <div align="center">
@@ -42,12 +39,13 @@ Some other tools are used at different steps. Here are the main steps of the FB5
 ![workflow]( https://github.com/Chuang1118/FB5PE/blob/master/Overview_simplify.png?raw=true )
 
 _Figure 1: overview of the FB5P-seq pipeline workflow_
+**Copyright 2019: PMlab, Centre d'Immunologie de Marseille-Luminy**
 
 ## 
 ![workflow_detail](https://github.com/Chuang1118/FB5PE/blob/master/Overview.png?raw=true)
 
 _Figure 2: detailed view of the FB5P-seq pipeline workflow_
-
+**Copyright 2019: PMlab, Centre d'Immunologie de Marseille-Luminy**
 
 
 ## Resource consideration
@@ -117,7 +115,6 @@ A step by step series of examples that tell you how to get a development env run
 Get them from Github
 
 ```
-git clone https://github.com/Chuang1118/FB5PE.git
 git clone https://github.com/MilpiedLab/FB5P-seq.git
 ```
 
@@ -187,7 +184,7 @@ wget https://zenodo.org/record/3403043/files/migmap.img
 wget https://zenodo.org/record/3403043/files/tools.img
 ```
 
-#### 3. Download rawdata .fastq.gz format from the GEO site.
+#### 3. Download or copy rawdata in .fastq.gz format.
 
 ```
 cd FB5P-seq
@@ -664,43 +661,12 @@ $ source fb5p/bin/activate
 (fb5p)$ nohup snakemake -j 30 -r --use-singularity -s snakefile/snakefile_all_TCR.yml &
 ```
 
-
-## Deployment
-
-Add additional notes about how to deploy this on a live systemPlease read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.
-
-Versioning
-We use SemVer for versioning. For the versions available, see the tags on this repository.
-
-Authors
-
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+**Chuang Dong, Pierre Milpied, Iñaki Cervera-Marzal**
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+Contact: dong@ciml.univ-mrs.fr or milpied@ciml.univ-mrs.fr 
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
