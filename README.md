@@ -691,7 +691,20 @@ $ source fb5p/bin/activate
 (fb5p)$ nohup snakemake -j 30 -r --use-singularity -s snakefile/snakefile_all_TCR.yml &
 ```
 
-## 
+## Data clearning [Optional]
+In our workflow, 1st version, we don't implement the method mark output files as temporary or protected files in snakemake.
+Line command to free up disk space and save only output important for downstream analyses(see previous section for details).
+```
+cd output
+rm -r 1_preprocessing
+rm -r 2_preprocessing2
+rm -r 3_Alignment
+rm -r 4_counting
+rm 5_dgsummary/plate*/*.bam
+rm -r 6_trinity_preprocessing
+rm -r 7_trinity/plate*/BAMbyBC
+rm -r 8_kallisto/plate*/BAMbyBC
+```
 
 ## Authors
 
