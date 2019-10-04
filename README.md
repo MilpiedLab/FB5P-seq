@@ -120,51 +120,78 @@ git clone https://github.com/MilpiedLab/FB5P-seq.git
 
 If you succeed, in the folder FB5P-seq/, the folder structure will be the following:
 ```
-|-- References
-|   |-- blast   
-|       |-- BCR_CstRegion
-|           `-- IMGT_IGH_ConstantRegion_nt.fasta
-|           `-- IMGT_IGH_ConstantRegion_nt.fasta.nhr
-|           `-- IMGT_IGH_ConstantRegion_nt.fasta.nin
-|           `-- IMGT_IGH_ConstantRegion_nt.fasta.nsq
-|           `-- IMGT_IGLK_ConstantRegion_nt.fasta
-|           `-- IMGT_IGLK_ConstantRegion_nt.fasta.nhr
-|           `-- IMGT_IGLK_ConstantRegion_nt.fasta.nin
-|           `-- IMGT_IGLK_ConstantRegion_nt.fasta.nsq
-|       |-- TCR_CstRegion
-|           `-- IMGT_TRA_ConstantRegion_nt.fasta
-|           `-- IMGT_TRB_ConstantRegion_nt.fasta
-|           `-- IMGT_TR_ConstantRegion_nt.fasta
-|           `-- IMGT_TR_ConstantRegion_nt.fasta.nhr
-|           `-- IMGT_TR_ConstantRegion_nt.fasta.nin
-|           `-- IMGT_TR_ConstantRegion_nt.fasta.nsq
-|           `-- IMGT_TRD_ConstantRegion_nt.fasta
-|           `-- IMGT_TRG_ConstantRegion_nt.fasta
-|-- Run_BCR
-|   `-- BCRpreRawdata_PlateSampleList.sh
-|   `-- BCRlaunch_1_lines_analysis.sh
-|   `-- BCRlaunch_1_lines_analysis_unlock.sh
-|   `-- custom_180416_h_HuPhysioB_2_metadata.csv
-|   |-- snakafile
-|       `-- snakefile_all_BCR.yml
-|       `-- dropseq_pipeline.yml
-|       `-- trinity_pipeline.ym
-|       `-- migmapBCR_pipeline.yml
-|       `-- kallisto_pipeline.yml
-|    |-- config
-|       `-- config_BCR.yml
-|       `-- cluster.json
-|    |-- barcode
-|       `-- barcode_seq_2ndSet.txt
-|    |-- script
-|       `-- ModifyBarcodeInBam_2ndSetBC.py
-|       `-- SplitBamByBarcodeID_2ndSetBC.py
+├── cdong
+│   ├── References
+│   │   └── blast
+│   │       ├── BCR_CstRegion
+│   │       │   ├── IMGT_IGH_ConstantRegion_aa.fasta
+│   │       │   ├── IMGT_IGH_ConstantRegion_nt.fasta
+│   │       │   ├── IMGT_IGH_ConstantRegion_nt.fasta.nhr
+│   │       │   ├── IMGT_IGH_ConstantRegion_nt.fasta.nin
+│   │       │   ├── IMGT_IGH_ConstantRegion_nt.fasta.nsq
+│   │       │   ├── IMGT_IGLK_ConstantRegion_aa.fasta
+│   │       │   ├── IMGT_IGLK_ConstantRegion_nt.fasta
+│   │       │   ├── IMGT_IGLK_ConstantRegion_nt.fasta.nhr
+│   │       │   ├── IMGT_IGLK_ConstantRegion_nt.fasta.nin
+│   │       │   └── IMGT_IGLK_ConstantRegion_nt.fasta.nsq
+│   │       └── TCR_CstRegion
+│   │           ├── IMGT_TRA_ConstantRegion_nt.fasta
+│   │           ├── IMGT_TRB_ConstantRegion_nt.fasta
+│   │           ├── IMGT_TR_ConstantRegion_nt.fasta
+│   │           ├── IMGT_TR_ConstantRegion_nt.fasta.nhr
+│   │           ├── IMGT_TR_ConstantRegion_nt.fasta.nin
+│   │           ├── IMGT_TR_ConstantRegion_nt.fasta.nsq
+│   │           ├── IMGT_TRD_ConstantRegion_nt.fasta
+│   │           └── IMGT_TRG_ConstantRegion_nt.fasta
+│   ├── Run_BCR
+│   │   ├── barcode
+│   │   │   └── barcode_seq_2ndSet.txt
+│   │   ├── BCRlaunch_1_lines_analysis.sh
+│   │   ├── BCRlaunch_1_lines_analysis_unlock.sh
+│   │   ├── BCRpreRawdata_PlateSampleList.sh
+│   │   ├── config
+│   │   │   ├── cluster.json
+│   │   │   └── config_BCR.yml
+│   │   ├── custom_180416_h_HuPhysioB_2_metadata.csv
+│   │   ├── script
+│   │   │   ├── ModifyBarcodeInBam_2ndSetBC.py
+│   │   │   └── SplitBamByBarcodeID_2ndSetBC.py
+│   │   └── snakefile
+│   │       ├── dropseq_pipeline.yml
+│   │       ├── kallisto_pipeline.yml
+│   │       ├── migmapBCR_pipeline.yml
+│   │       ├── snakefile_all_BCR.yml
+│   │       └── trinity_pipeline.yml
+│   └── Run_TCR
+│       ├── barcode
+│       │   └── barcode_seq_2ndSet.txt
+│       ├── config
+│       │   ├── cluster.json
+│       │   └── config_TCR.yml
+│       ├── custom_190220_h_HuTcells-AR_metadata.csv
+│       ├── preRawdata_PlateSampleList_TCR.sh
+│       ├── script
+│       │   ├── ModifyBarcodeInBam_2ndSetBC.py
+│       │   └── SplitBamByBarcodeID_2ndSetBC.py
+│       ├── snakefile
+│       │   ├── dropseq_pipeline.yml
+│       │   ├── kallisto_pipeline.yml
+│       │   ├── migmapTCR_pipeline.yml
+│       │   ├── snakefile_all_TCR.yml
+│       │   └── trinity_pipeline.yml
+│       ├── TCRlaunch_1_lines_analysis.sh
+│       └── TCRlaunch_1_lines_analysis_unlock.sh
+├── LOGOn.png
+├── Overview.png
+├── Overview_simplify.png
+├── README.md
+└── screen1.png
 ```
 #### 2. Use wget for get all singularity images, Star reference genome, reference genome .fa and annotation .gtf
 
 Download reference genome (human GRCh38 plus additional references for ERCC spike-ins) from zenodo and put them at the right place
 ```
-cd FB5P-seq/References
+cd FB5P-seq/cdong/References/
 wget https://zenodo.org/record/3403043/files/starGenome_GRCh38_ERCC92.tar.gz
 tar zxvf starGenome_GRCh38_ERCC92.tar.gz
 wget https://zenodo.org/record/3403043/files/GRCh38_ERCC92.tar.gz
@@ -174,7 +201,7 @@ tar zxvf GRCh38_ERCC92.tar.gz
 Get singularity images from zenodo and create the folder called "simg" under Run_BCR folder.
 
 ```
-cd Run_BCR
+cd ../Run_BCR/
 mkdir simg
 cd simg
 wget https://zenodo.org/record/3403043/files/bcr_pipe_masters_v2.img
@@ -187,7 +214,7 @@ wget https://zenodo.org/record/3403043/files/tools.img
 #### 3. Download or copy rawdata in .fastq.gz format.
 
 ```
-cd FB5P-seq
+cd ..
 mkdir Rawdata
 cd Rawdata
 wget [OPTION]... [URL]...
@@ -232,6 +259,7 @@ Plate,,6
 For this example, the script takes custom_180416_h_HuPhysioB_2_metadata.csv as input parameter.
 
 ```
+cd ..
 ./BCRpreRawdata_PlateSampleList.sh custom_180416_h_HuPhysioB_2_metadata.csv
 ```
 
@@ -656,10 +684,14 @@ barcodes:
 snakemake -rn : dryrun print a summary of the DAG of jobs.
 if you don't get any error, you want to launch the jobs delete "n".
 ```
+$ pwd
+/FB5P-seq/cdong/Run_TCR
 $ source fb5p/bin/activate
 (fb5p)$ nohup snakemake -j 30 -rn --use-singularity -s snakefile/snakefile_all_TCR.yml &
 (fb5p)$ nohup snakemake -j 30 -r --use-singularity -s snakefile/snakefile_all_TCR.yml &
 ```
+
+## 
 
 ## Authors
 
