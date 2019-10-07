@@ -691,9 +691,9 @@ $ source fb5p/bin/activate
 (fb5p)$ nohup snakemake -j 30 -r --use-singularity -s snakefile/snakefile_all_TCR.yml &
 ```
 
-## Data clearning [Optional]
-In our workflow, 1st version, we don't implement the method mark output files as temporary or protected files in snakemake.
-Line command to free up disk space and save only output important for downstream analyses(see previous section for details).
+## Cleaning up intermediate files [Optional]
+In the current workflow, we have not implemented the method to mark output files as temporary or protected files in snakemake.
+To free up disk space after executing the pipeline, you can use the following command lines and save only the important outputs for downstream analyses (see previous section for details).
 ```
 cd output
 rm -r 1_preprocessing
