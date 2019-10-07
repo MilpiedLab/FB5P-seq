@@ -711,7 +711,3 @@ rm -r 8_kallisto/plate*/BAMbyBC
 **Chuang Dong, Pierre Milpied, Iñaki Cervera-Marzal**
 
 Contact: dong@ciml.univ-mrs.fr or milpied@ciml.univ-mrs.fr 
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
